@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+
+    body {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .input {
+      border: none;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+      padding: 2px;
+      margin-right:4px;
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    .button {
+      outline: none;
+      text-transform: uppercase;
+      font-weight: bold;
+      position: relative;
+      top:0;
+      transition: all 0.15s ease-in-out;
+      color: white;
+      background-color: #64dfdf;
+      border: none;
+      font-size: 1.2rem;
+      border-radius: 3px;
+      padding: 10px 40px;
+      font-family:'Lato', sans-serif;
+      text-decoration: none;
+      background-color: rgba(46,204,113, 0.85);
+      border-bottom: 5px solid #27ae60;
+    }
+
+    .button:hover {
+      background-color: rgb(46,204,113);
+      cursor: pointer;
+    }
+
+
+    .button:active {
+      outline: none;
+      border-bottom: 1px solid;
+      transform: translate(0, 5px);
+    }
+
+    .vSpacer {
+      height:10px;
+    }
+
+    .searchBar {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+    }
+
+    .alert {
+      display: none;
+    }
+
+    .gifs {
+      display:inline-block;
+    }
+  </style>
+
+  <title>GIF Generator</title>
+</head>
+
+<body>
+  <div class="searchBar">
+    <div class="inputModule">
+      <input class="input" type="text">
+      <button class="button">Generate</button>
+    </div>
+    <div class="vSpacer"></div>
+    <div class="alert">Enter some text!</div>
+    <div class="vSpacer"></div>
+    <div class="gifs"></div>
+  </div>
+  <script>
+
+    function generateGiphyAPIURL(searchQuery) {
+      searchQuery = searchQuery.toLowerCase().replace(/ /g, '+')
+      return `http://api.giphy.com/v1/gifs/search?q=${searchQuery}&api_key=gwuE74E6QqtlAoC9AAqJKg6jldZ649CQ`
+    }
+
+    function runRequestAndConsume(searchQuery, callback) {
+      const giphyAjaxRequest = new XMLHttpRequest()
+      giphyAjaxRequest.open('GET', generateGiphyAPIURL(searchQuery))
+      giphyAjaxRequest.send()
+      giphyAjaxRequest.addEventListener('load', (e) => {
+        const data = e.target.response
+        callback(data)
+      })
+    }
+
+    function getInputAndPutGifInDOM(e, isOK = false) {
+      const inputValue = document.querySelector('input').value
+      if (inputValue === '' && (e.which === 13 || isOK)) {
+        document.querySelector('.alert').style.display = 'block'
+        return
+      } else {
+        document.querySelector('.alert').style.display = 'none'
+      }
+      if (e.which === 13 || isOK) {
+        document.querySelector('input').value = ''
+        runRequestAndConsume(inputValue, pushToDOM)
+      }
+    }
+
+    document.querySelector('.button').addEventListener('click', (e) => getInputAndPutGifInDOM(e, true))
+    document.querySelector('input').addEventListener('keyup', (e) => getInputAndPutGifInDOM(e))
+
+    const pushToDOM = (value) => {
+      const response = JSON.parse(value)
+      const container = document.querySelector('.gifs')
+      while (container.firstChild) {
+        container.removeChild(container.firstChild)
+      }
+      for (let i = 0; i < response.data.length; ++i) {
+        const imageUrl = response.data[i].images.fixed_height.url
+        const img = document.createElement('img')
+        img.src = imageUrl
+        container.appendChild(img)
+      }
+
+    }
+  </script>
+</body>
+
+</html>
