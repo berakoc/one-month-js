@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+
+    .animate {
+      transition: all 0.15s ease-in-out;
+    }
+
+    body {
+      text-align: center;
+      margin-top: 20px;
+      font-family:'Lato', sans-serif;
+    }
+
+    .input {
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+      border: 1px solid gray;
+      border-radius: 3px;
+      height: 32px;
+      font-size: 1rem;
+      padding: 4px 8px;
+      margin-right:12px;
+    }
+
+    .input:focus {
+      box-shadow: 0 6px 9px rgba(0, 0, 0, 0.2);
+      outline: none;
+    }
+
+    .button {
+      outline: none;
+      text-transform: uppercase;
+      font-weight: bold;
+      position: relative;
+      top:0;
+      color: white;
+      background-color: #64dfdf;
+      border: none;
+      font-size: 1.2rem;
+      border-radius: 3px;
+      padding: 10px 40px;
+      text-decoration: none;
+      background-color: rgba(46,204,113, 0.85);
+      border-bottom: 5px solid #27ae60;
+    }
+
+    .button:hover {
+      background-color: rgb(46,204,113);
+      cursor: pointer;
+    }
+
+
+    .button:active {
+      outline: none;
+      border-bottom: 1px solid;
+      transform: translate(0, 5px);
+    }
+
+    .vSpacer {
+      height:10px;
+    }
+
+    .searchBar {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+    }
+
+    .alert {
+      display: none;
+    }
+
+    .gifs {
+      display:inline-block;
+    }
+  </style>
+
+  <title>GIF Generator</title>
+</head>
+
+<body>
+  <div class="searchBar">
+    <div class="inputModule">
+      <input class="animate input" type="text" placeholder="Write some words here">
+      <button class="animate button">Search Gifs</button>
+      <input type="checkbox" id="watch" />
+      <label for="watch">Watch</label>
+    </div>
+    <div class="vSpacer"></div>
+    <div class="alert">Enter some text!</div>
+    <div class="vSpacer"></div>
+    <div class="gifs"></div>
+  </div>
+  <script>
+
+    function generateGiphyAPIURL(searchQuery) {
+      searchQuery = searchQuery.toLowerCase().replace(/ /g, '+')
+      return `http://api.giphy.com/v1/gifs/search?q=${searchQuery}&api_key=gwuE74E6QqtlAoC9AAqJKg6jldZ649CQ&limit=10`
+    }
+
+    function runRequestAndConsume(searchQuery, callback) {
+      const giphyAjaxRequest = new XMLHttpRequest()
+      giphyAjaxRequest.open('GET', generateGiphyAPIURL(searchQuery))
+      giphyAjaxRequest.send()
+      giphyAjaxRequest.addEventListener('load', (e) => {
+        const data = e.target.response
+        callback(data)
+      })
+    }
+
+    function getInputAndPutGifInDOM(e, isOK = false) {
+      const inputValue = document.querySelector('input').value
+      if (inputValue === '' && (e.which === 13 || isOK)) {
+        document.querySelector('.alert').style.display = 'block'
+        return
+      } else {
+        document.querySelector('.alert').style.display = 'none'
+      }
+      if (e.which === 13 || isOK) {
+        document.querySelector('input').value = ''
+        runRequestAndConsume(inputValue, pushToDOM)
+      }
+    }
+
+    document.querySelector('.button').addEventListener('click', (e) => getInputAndPutGifInDOM(e, true))
+    document.querySelector('input').addEventListener('keyup', (e) => getInputAndPutGifInDOM(e))
+
+    const pushRecursive = (container, data, index) => {
+      if (index === data.length) {
+        document.querySelector('#watch').disabled = false
+        return
+      }
+      const imageUrl = data[index].images.fixed_height.url
+      const img = document.createElement('img')
+      img.src = imageUrl
+      container.appendChild(img)
+      setTimeout(() => {
+        container.removeChild(container.firstChild)
+        pushRecursive(container, data, index + 1)
+      }, 5000)
+    }
+
+    const pushToDOM = (value) => {
+      const response = JSON.parse(value)
+      document.querySelector('#watch').disabled = true
+      const container = document.querySelector('.gifs')
+      while (container.firstChild) {
+        container.removeChild(container.firstChild)
+      }
+      pushRecursive(container, response.data, 0)
+    }
+  </script>
+</body>
+
+</html>
