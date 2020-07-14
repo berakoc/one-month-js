@@ -13,7 +13,14 @@
 
   <script async>
     alert('Page has loaded!')
-    document.write('<pre><code>Type TabNine::sem to enable semantic completion for HTML.</code></pre>')
+    const name = prompt('Enter you name:')
+    const colors = ['blue', 'orange', 'violet']
+    document.write(`<pre><code>Welcome ${name}!</code></pre>`)
+    const randomNumber = Math.floor(Math.random() * colors.length)
+    document.write(`<br>You favourite color is `)
+    if (randomNumber === 0) document.write('blue.')
+    else if (randomNumber === 1) document.write('orange.')
+    else document.write('violet.')
     var buttonLink = document.getElementById('buttonLink');
     buttonLink.addEventListener('click', sayFeeling);
 
