@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    const array = [4, 5, 6, 7]
+    document.write('Keys: ')
+    for (key in array) {
+      document.write(key + ' ')
+    }
+    document.write('<br>')
+    document.write('Values: ')
+    for (value of array) {
+      document.write(value + ' ')
+    }
+    let sum = 0
+    array.forEach(e => sum += e)
+    document.write(`<br>Sum of array value: ${sum}`)
+  </script>
+</body>
+
+</html>

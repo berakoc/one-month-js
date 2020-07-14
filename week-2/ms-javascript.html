@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+	<meta charset="utf-8">
+	<title>JavaScript</title>
+	</head>
+
+<body>
+
+	<h1 id="mr-javascript">I'm Mr. JavaScript</h1>
+	<a href="#" id="anchor">Hey JavaScript, how ya feeling?</a>
+
+	<script>
+	var anchor = document.getElementById('anchor');
+	anchor.addEventListener('click',function(){
+		//alert("I'm so gooood!");
+		var name = document.getElementById('mr-javascript');
+		//console.log(name);
+		name.innerHTML = "Not good bah!";
+
+		});
+
+	</script>
+
+</body>
+</html>
