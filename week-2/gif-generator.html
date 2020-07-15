@@ -101,7 +101,7 @@
 
     function generateGiphyAPIURL(searchQuery) {
       searchQuery = searchQuery.toLowerCase().replace(/ /g, '+')
-      return `http://api.giphy.com/v1/gifs/search?q=${searchQuery}&api_key=gwuE74E6QqtlAoC9AAqJKg6jldZ649CQ&limit=10`
+      return `http://api.giphy.com/v1/gifs/search?q=${searchQuery}&api_key=gwuE74E6QqtlAoC9AAqJKg6jldZ649CQ&limit=100`
     }
 
     function runRequestAndConsume(searchQuery, callback) {
@@ -146,6 +146,15 @@
       }, 5000)
     }
 
+    const displayNormal = (container, data) => {
+      data.forEach(datum => {
+        const imageUrl = datum.images.fixed_height.url
+        const img = document.createElement('img')
+        img.src = imageUrl
+        container.appendChild(img)
+      })
+    }
+
     const pushToDOM = (value) => {
       const response = JSON.parse(value)
       document.querySelector('#watch').disabled = true
@@ -153,7 +162,12 @@
       while (container.firstChild) {
         container.removeChild(container.firstChild)
       }
-      pushRecursive(container, response.data, 0)
+      if (document.querySelector('#watch').checked) {
+        pushRecursive(container, response.data, 0)
+      } else {
+        displayNormal(container, response.data)
+        document.querySelector('#watch').disabled = false
+      }
     }
   </script>
 </body>
