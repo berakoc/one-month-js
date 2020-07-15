@@ -1,0 +1,27 @@
+{
+  "name": "jukebox",
+  "version": "1.0.0",
+  "description": "A music player app with VanillaJS and SoundCloud API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MuhammedBeraKoc/one-month-js.git"
+  },
+  "keywords": [
+    "SoundCloud",
+    "API",
+    "music-player"
+  ],
+  "author": "Muhammed Bera Koc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MuhammedBeraKoc/one-month-js/issues"
+  },
+  "homepage": "https://github.com/MuhammedBeraKoc/one-month-js#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
